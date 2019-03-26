@@ -6,6 +6,7 @@ import {
     TextInput,
     TouchableHighlight,
     AsyncStorage,
+    Switch,
 } from 'react-native'
 
 
@@ -50,13 +51,19 @@ class AddDeck extends Component{
         questions: [],
         view: 0,
         tempQuestion: "",
-        tempAnswer: "",
+        tempAnswer1: "",
+        tempAnswer2: "",
+        tempAnswer: 2,
+        switch1: false,
+        switch2: false,
     }
     addNextHandler=()=>{
-        const { tempQuestion, tempAnswer } = this.state;
+        const { tempQuestion, tempAnswer, tempAnswer1, tempAnswer2 } = this.state;
         const state = this.state;
-        state.questions.push({question: tempQuestion,answer: tempAnswer})
-        state.tempAnswer = "";
+        state.questions.push({question: tempQuestion,answer: tempAnswer, option1: tempAnswer1, option2: tempAnswer2})
+        state.tempAnswer = 2;
+        state.tempAnswer1 = "";
+        state.tempAnswer2 = "";
         state.tempQuestion = "";
         this.setState({...state});
     }
@@ -106,14 +113,38 @@ class AddDeck extends Component{
                 </View>
                 
                 <Text style={{fontSize: 15, alignSelf:'flex-start'}}>
-                    Answer
+                    Answer 1
                 </Text>
                 <View style={{flexDirection: 'row'}}>
                 <TextInput style={{ flex: 1 ,borderWidth: 1, borderColor:'black', borderRadius: 7, paddingLeft: 10}}
                     placeholder="Enter Answer"
-                    onChangeText={(text)=>this.setState({tempAnswer: text})}
-                    value={this.state.tempAnswer} />
+                    onChangeText={(text)=>this.setState({tempAnswer1: text})}
+                    value={this.state.tempAnswer1} />
+                    <Switch
+                     value={this.state.switch1}
+                     onValueChange={()=>this.setState((prevState)=>({
+                        switch1: !prevState.switch1,
+                        tempAnswer: prevState.tempAnswer===0?1:0,
+                     }))}
+                      />
                 </View>
+
+                <Text style={{fontSize: 15, alignSelf:'flex-start'}}>
+                    Answer 2
+                </Text>
+                <View style={{flexDirection: 'row'}}>
+                <TextInput style={{ flex: 1 ,borderWidth: 1, borderColor:'black', borderRadius: 7, paddingLeft: 10}}
+                    placeholder="Enter Answer"
+                    onChangeText={(text)=>this.setState({tempAnswer2: text})}
+                    value={this.state.tempAnswer2} />
+                    <Switch
+                        value={this.state.switch2}
+                        onValueChange={()=>this.setState((prevState)=>({
+                         switch2: !prevState.switch2,
+                         tempAnswer: prevState.tempAnswer===1?0:1,
+                        }))} />
+                </View>
+                    
                 <TouchableHighlight style={{backgroundColor: 'black', marginTop: 20, width: 120, height: 45, justifyContent: 'center', alignItems: 'center', borderRadius: 7, }}
                    onPress={this.addNextHandler } >
                     <Text style={{color: 'white', fontSize: 20,}} >
