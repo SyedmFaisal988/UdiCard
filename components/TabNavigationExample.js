@@ -15,6 +15,7 @@ import {
     createBottomTabNavigator,
     createAppContainer
 } from 'react-navigation';
+import StackNavigatorExample from './StackNavigatorExample';
 
 // **********************************************************
 //Don't forget to run on commnad prompt and restart you app
@@ -73,7 +74,7 @@ class NewDeck extends Component{
     render(){
         return(
             <View style={{flex:1}}>
-                <AddDeck />
+                <AddDeck navigation={this.props.navigation} />
             </View>
         )
     }
@@ -81,28 +82,81 @@ class NewDeck extends Component{
 
 class AddDeck extends Component{
     state = {
-        text: "",
+        title: "",
+        question: [],
+        view: 0,
+        tempQuestion: "",
+        tempAnswer: "",
     }
     render(){
+        const { navigate } = this.props.navigation;
         return(
+            this.state.view===0?
             <View style={styles.container}>
                 <Text style={styles.add_deck}>
                     Add A new Deck to list
                 </Text>
                 <Text>
-                    {this.state.text}
+                    {this.state.title}
                 </Text>
                 <TextInput style={{ width: 340, borderWidth: 1, borderColor:'black', paddingLeft: 10 ,borderRadius: 10,}}
                     placeholder="Deck Title"
-                    onChangeText={(text)=>this.setState({text,})} />
+                    value={this.state.title}
+                    onChangeText={(text)=>this.setState({title: text})} />
                 <TouchableHighlight style={{backgroundColor: 'black', marginTop: 20, width: 120, height: 45, justifyContent: 'center', alignItems: 'center', borderRadius: 7, }}
-                   onPress={()=>AsyncStorage.setItem(this.state.text, "", (err)=>{
-                       (err) && this.setState({text: err.toString()})
-                   })} >
+                   onPress={()=>this.setState({view: 1})}>
                     <Text style={{color: 'white', fontSize: 20,}}>
                         Submit
                     </Text>
                 </TouchableHighlight>
+
+
+                    {/* this button is to be deleted in final version */}
+                <TouchableHighlight onPress={()=>{AsyncStorage.getAllKeys()
+                .then(v=>AsyncStorage.multiRemove(v))}} >
+                    <Text>
+                        Delete All data
+                    </Text>
+                </TouchableHighlight>
+            </View>:
+            <View style={[styles.container, {paddingRight: 20, paddingLeft: 20, flexDirection: 'column'}]}>
+                <Text style={{fontSize: 20}}>
+                    Add Cards to Deck: {this.state.title}
+                </Text>
+                <Text style={{fontSize: 15, alignSelf: 'flex-start' }}>
+                    Question
+                </Text>
+                <View style={{flexDirection: 'row'}}>
+                <TextInput style={{  flex: 1 ,borderWidth: 1, borderColor:'black', borderRadius: 7}}
+                    onChangeText={(text)=>this.setState({tempQuestion: text})}
+                    value={this.state.tempQuestion} />
+                </View>
+                
+                <Text style={{fontSize: 15, alignSelf:'flex-start'}}>
+                    Answer
+                </Text>
+                <View style={{flexDirection: 'row'}}>
+                <TextInput style={{ flex: 1 ,borderWidth: 1, borderColor:'black', borderRadius: 7}}
+                    onChangeText={(text)=>this.setState({tempAnswer: text})}
+                    value={this.state.tempAnswer} />
+                </View>
+                <TouchableHighlight style={{backgroundColor: 'black', marginTop: 20, width: 120, height: 45, justifyContent: 'center', alignItems: 'center', borderRadius: 7, }}>
+                    <Text style={{color: 'white', fontSize: 20,}} >
+                        Add Next
+                    </Text>
+                </TouchableHighlight>
+            </View>
+        )
+    }
+}
+
+class AddCards extends Component{
+    render(){
+        return(
+            <View style={{flex:1}}>
+                <Text>
+                    Hello
+                </Text>
             </View>
         )
     }
@@ -148,7 +202,7 @@ const TabNavigator = createMaterialTopTabNavigator(
         // further properties are listed on the following link
         //https://reactnavigation.org/docs/en/material-top-tab-navigator.html
         //*****************************************************************
-        initialRouteName: "Deck",
+        initialRouteName: "NewDeck",
         // change following with top / bottom
         tabBarPosition: 'top',
         tabBarOptions: {
