@@ -48,7 +48,21 @@ class Deck extends Component{
                     AsyncStorage.multiGet((v), (err,data)=>{
                         if(!err){
                             let hellow = [];
-                            data.map((rec)=>hellow.push(rec[0]+':'+rec[1]));
+                            data.map((rec)=>hellow.push({name: rec[0],
+                                cards: JSON.parse(rec[1])}));
+                            this.setState({hellow,})
+                        }
+                    })
+                })
+    }
+    componentDidUpdate(prevProps, prevState) {
+        AsyncStorage.getAllKeys()
+                .then(v =>{
+                    AsyncStorage.multiGet((v), (err,data)=>{
+                        if(!err){
+                            let hellow = [];
+                            data.map((rec)=>hellow.push({name: rec[0],
+                                cards: JSON.parse(rec[1])}));
                             this.setState({hellow,})
                         }
                     })
@@ -58,9 +72,9 @@ class Deck extends Component{
         return(
         <View style={{width: 350, justifyContent: 'center', }}>
             {
-                this.state.hellow.length>=1?this.state.hellow.map(data =>
-                    <View style={{borderBottomColor: 'black', borderBottomWidth: 2,}}>
-                        <Text style={{textAlign: 'center'}}>{data}</Text>
+                this.state.hellow.length>=1?this.state.hellow.map((data, index) =>
+                    <View key={index} style={{borderBottomColor: 'black', borderBottomWidth: 1,}}>
+                        <Text style={{textAlign: 'center'}}>{data.name}</Text>
                         <Text style={{textAlign: 'center'}}>Hello</Text>
                     </View>
             ):<Text>Nothing</Text>
@@ -83,10 +97,18 @@ class NewDeck extends Component{
 class AddDeck extends Component{
     state = {
         title: "",
-        question: [],
+        questions: [],
         view: 0,
         tempQuestion: "",
         tempAnswer: "",
+    }
+    addNextHandler=()=>{
+        const { tempQuestion, tempAnswer } = this.state;
+        const state = this.state;
+        state.questions.push({question: tempQuestion,answer: tempAnswer})
+        state.tempAnswer = "";
+        state.tempQuestion = "";
+        this.setState({...state});
     }
     render(){
         const { navigate } = this.props.navigation;
@@ -120,14 +142,15 @@ class AddDeck extends Component{
                 </TouchableHighlight>
             </View>:
             <View style={[styles.container, {paddingRight: 20, paddingLeft: 20, flexDirection: 'column'}]}>
-                <Text style={{fontSize: 20}}>
+                <Text style={{fontSize: 27, alignSelf: 'flex-start'}}>
                     Add Cards to Deck: {this.state.title}
                 </Text>
                 <Text style={{fontSize: 15, alignSelf: 'flex-start' }}>
                     Question
                 </Text>
                 <View style={{flexDirection: 'row'}}>
-                <TextInput style={{  flex: 1 ,borderWidth: 1, borderColor:'black', borderRadius: 7}}
+                <TextInput style={{  flex: 1 ,borderWidth: 1, borderColor:'black', borderRadius: 7, paddingLeft: 10}}
+                    placeholder="Enter Question"
                     onChangeText={(text)=>this.setState({tempQuestion: text})}
                     value={this.state.tempQuestion} />
                 </View>
@@ -136,13 +159,26 @@ class AddDeck extends Component{
                     Answer
                 </Text>
                 <View style={{flexDirection: 'row'}}>
-                <TextInput style={{ flex: 1 ,borderWidth: 1, borderColor:'black', borderRadius: 7}}
+                <TextInput style={{ flex: 1 ,borderWidth: 1, borderColor:'black', borderRadius: 7, paddingLeft: 10}}
+                    placeholder="Enter Answer"
                     onChangeText={(text)=>this.setState({tempAnswer: text})}
                     value={this.state.tempAnswer} />
                 </View>
-                <TouchableHighlight style={{backgroundColor: 'black', marginTop: 20, width: 120, height: 45, justifyContent: 'center', alignItems: 'center', borderRadius: 7, }}>
+                <TouchableHighlight style={{backgroundColor: 'black', marginTop: 20, width: 120, height: 45, justifyContent: 'center', alignItems: 'center', borderRadius: 7, }}
+                   onPress={this.addNextHandler } >
                     <Text style={{color: 'white', fontSize: 20,}} >
                         Add Next
+                    </Text>
+                </TouchableHighlight>
+                <TouchableHighlight style={{marginTop: 5, width: 120, height: 45, justifyContent: 'center', alignItems: 'center', borderRadius: 7, borderColor: 'black', borderWidth: 2 }}
+                    onPress={()=>{
+                        AsyncStorage.setItem(this.state.title, JSON.stringify(this.state.questions), (err)=>{
+                        (err) && alert('err');
+                        navigate('Deck');
+                    })
+                    }} >
+                    <Text style={{color: 'black', fontSize: 20,}}>
+                        Submit
                     </Text>
                 </TouchableHighlight>
             </View>
