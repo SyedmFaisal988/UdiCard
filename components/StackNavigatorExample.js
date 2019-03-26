@@ -48,12 +48,17 @@ class HomeScreen extends Component {
     }
     render(){
         return(
-        <View style={{flex: 1, width: 350, justifyContent: 'center' }}>
+        <View style={{flex: 1, justifyContent: 'center' }}>
             {
                 this.state.hellow.length>=1?this.state.hellow.map((data, index) =>
                     <View key={index} style={{borderBottomColor: 'black', borderBottomWidth: 1,paddingBottom: 10, paddingTop: 10}}>
-                        <Text style={{textAlign: 'center', fontSize: 40}}>{data.name}</Text>
-                        <Text style={{textAlign: 'center', fontSize: 20}}>{data.cards.length} cards</Text>
+                        <TouchableHighlight 
+                            onPress={()=>this.props.navigation.navigate('About', {data,})} >
+                            <Text style={{textAlign: 'center', fontSize: 40,}}>{data.name}</Text>
+                        </TouchableHighlight>
+                        <TouchableHighlight>
+                            <Text style={{textAlign: 'center', fontSize: 20, color: 'grey'}}>{data.cards.length} cards</Text>
+                        </TouchableHighlight>
                     </View>
             ):<Text>Nothing</Text>
             }
@@ -67,30 +72,49 @@ class HomeScreen extends Component {
 
 
 class ContactUs extends Component {
-    
+    state = {
+        quest: 0
+    }
     render() {
+        const  data  = this.props.navigation.getParam('data');
+        const { quest } = this.state;
         return (
-            <TabNavigationExample />
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <Text style={{fontSize: 50, textAlign: "center"}}>
+                    {data.cards[quest].question}
+                </Text>
+            </View>
         );
     }
 }
 
 class AboutUs extends Component {
     render() {
+        const data = this.props.navigation.getParam('data');
         const navigation = this.props.navigation
         return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <Text style={{ color: 'blue', fontSize: 35 }}>
-                    This is AboutUs screen
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingLeft: 10, paddingRight: 10 }}>
+                <Text style={{ fontSize: 50, }}>
+                    {data.name}
+               </Text>
+               <Text style={{ fontSize: 30, color: 'grey',}}>
+                    {data.cards.length} cards 
                </Text>
 
 
                 <TouchableHighlight
-                    style={[{ backgroundColor: 'navy', }, styles.button]}
-                    onPress={() => navigation.navigate('Contact')}
+                    style={[{ backgroundColor: 'black', }, styles.button]}
+                    onPress={() => navigation.navigate('Contact', {data,})}
                 >
                     <Text style={{ fontSize: 20, color: 'white' }}>
-                        Contact Us
+                        Start Quiz
+                    </Text>
+                </TouchableHighlight>
+
+                <TouchableHighlight style={[styles.button,{marginTop: 5}]}
+                    onPress={()=>this.props.navigation.goBack()}>
+                    <Text style={{fontSize: 20}}>
+                        Go Back
                     </Text>
                 </TouchableHighlight>
 
@@ -113,6 +137,7 @@ const StackNavigatorExample = createStackNavigator(
         About: {
             screen: AboutUs,
             navigationOptions: {
+                header: null,
                 title: "ABOUT US",
                 headerBackImage: () => <Entypo name='back' size={30} color="blue" />,
             }
@@ -121,7 +146,7 @@ const StackNavigatorExample = createStackNavigator(
             screen: ContactUs,
             navigationOptions: {
                 title: "CONTACT US",
-                headerStyle: {height: 0}                
+                header: null,
             },
         },
     },
@@ -138,8 +163,10 @@ const StackNavigatorExample = createStackNavigator(
 
 const styles = StyleSheet.create({
     button: {
-        width: 120,
-        margin: 20,
+        width: 150,
+        marginTop: 20,
+        paddingTop: 10,
+        paddingBottom: 10,
         borderWidth: 2,
         borderRadius: 8,
         alignItems: 'center',

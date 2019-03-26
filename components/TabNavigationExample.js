@@ -136,18 +136,6 @@ class AddDeck extends Component{
     }
 }
 
-class AddCards extends Component{
-    render(){
-        return(
-            <View style={{flex:1}}>
-                <Text>
-                    Hello
-                </Text>
-            </View>
-        )
-    }
-}
-
 const styles = StyleSheet.create({
     container:{
         flex: 1,
