@@ -7,7 +7,9 @@ import { createMaterialTopTabNavigator,createAppContainer } from 'react-navigati
 export default class App extends Component {
   render() {  
     return (
-      <TabNavigationExample />
+      <View style={{flex: 1}}>
+        <TabNavigationExample />
+      </View>
     );
   }
 }

@@ -24,62 +24,12 @@ import StackNavigatorExample from './StackNavigatorExample';
 //
 // **********************************************************
 
-
-class Decker extends Component {
-    render() {
-        return (
-            <View style={{justifyContent: "center", alignItems: 'center', flex: 1}} >
-                <Text >
-                    This is home screen
-               </Text>
-               <Deck />
-            </View>
-        );
-    }
-}
-
 class Deck extends Component{
-    state = {
-        hellow: [],
-    }
-    componentDidMount() {
-        AsyncStorage.getAllKeys()
-                .then(v =>{
-                    AsyncStorage.multiGet((v), (err,data)=>{
-                        if(!err){
-                            let hellow = [];
-                            data.map((rec)=>hellow.push({name: rec[0],
-                                cards: JSON.parse(rec[1])}));
-                            this.setState({hellow,})
-                        }
-                    })
-                })
-    }
-    componentDidUpdate(prevProps, prevState) {
-        AsyncStorage.getAllKeys()
-                .then(v =>{
-                    AsyncStorage.multiGet((v), (err,data)=>{
-                        if(!err){
-                            let hellow = [];
-                            data.map((rec)=>hellow.push({name: rec[0],
-                                cards: JSON.parse(rec[1])}));
-                            this.setState({hellow,})
-                        }
-                    })
-                })
-    }
     render(){
         return(
-        <View style={{width: 350, justifyContent: 'center', }}>
-            {
-                this.state.hellow.length>=1?this.state.hellow.map((data, index) =>
-                    <View key={index} style={{borderBottomColor: 'black', borderBottomWidth: 1,}}>
-                        <Text style={{textAlign: 'center'}}>{data.name}</Text>
-                        <Text style={{textAlign: 'center'}}>Hello</Text>
-                    </View>
-            ):<Text>Nothing</Text>
-            }
-        </View>
+            <View style={{flex: 1, width: 350}}>  
+                <StackNavigatorExample />
+            </View>
         );
     }
 }
@@ -221,7 +171,7 @@ const styles = StyleSheet.create({
 const TabNavigator = createMaterialTopTabNavigator(
     {
         Deck: {
-            screen: Decker,
+            screen: Deck,
             navigationOptions: {
                 tabBarIcon: () => <Feather name='home' size={25} color="white" />
             }
@@ -238,7 +188,7 @@ const TabNavigator = createMaterialTopTabNavigator(
         // further properties are listed on the following link
         //https://reactnavigation.org/docs/en/material-top-tab-navigator.html
         //*****************************************************************
-        initialRouteName: "NewDeck",
+        initialRouteName: "Deck",
         // change following with top / bottom
         tabBarPosition: 'top',
         tabBarOptions: {

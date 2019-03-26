@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Text, View, TouchableHighlight, StyleSheet } from 'react-native'
+import { Button, Text, View, TouchableHighlight, StyleSheet, AsyncStorage } from 'react-native'
 import TabNavigationExample from './TabNavigationExample';
 
 import { Entypo } from '@expo/vector-icons'
@@ -17,44 +17,47 @@ import {
 
 
 class HomeScreen extends Component {
-
-    render() {
-        const navigation = this.props.navigation
-        console.log(this.props)
-        return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
-                <Text style={{ fontSize: 35 }}>
-                    This is home screen and user name is {' '}
-                    <Text style={{
-                        fontStyle: 'italic',
-                        fontWeight: 'bold',
-                        color: 'olive'
-                    }}>
-                        {navigation.getParam('username').toUpperCase()}
-                    </Text>
-                </Text>
-
-
-                <TouchableHighlight
-                    style={[{ backgroundColor: 'maroon', }, styles.button]}
-                    onPress={() => navigation.navigate('About')}
-                >
-                    <Text style={{ fontSize: 20, color: 'white' }}>
-                        About Us
-                    </Text>
-                </TouchableHighlight>
-
-
-                <TouchableHighlight
-                    style={[{ backgroundColor: 'navy', }, styles.button]}
-                    onPress={() => navigation.navigate('Contact')}
-                >
-                    <Text style={{ fontSize: 20, color: 'white' }}>
-                        Contact Us
-                    </Text>
-                </TouchableHighlight>
-
-            </View>
+    state = {
+        hellow: [],
+    }
+    componentDidMount() {
+        AsyncStorage.getAllKeys()
+                .then(v =>{
+                    AsyncStorage.multiGet((v), (err,data)=>{
+                        if(!err){
+                            let hellow = [];
+                            data.map((rec)=>hellow.push({name: rec[0],
+                                cards: JSON.parse(rec[1])}));
+                            this.setState({hellow,})
+                        }
+                    })
+                })
+    }
+    componentDidUpdate(prevProps, prevState) {
+        AsyncStorage.getAllKeys()
+                .then(v =>{
+                    AsyncStorage.multiGet((v), (err,data)=>{
+                        if(!err){
+                            let hellow = [];
+                            data.map((rec)=>hellow.push({name: rec[0],
+                                cards: JSON.parse(rec[1])}));
+                            this.setState({hellow,})
+                        }
+                    })
+                })
+    }
+    render(){
+        return(
+        <View style={{flex: 1, width: 350, justifyContent: 'center' }}>
+            {
+                this.state.hellow.length>=1?this.state.hellow.map((data, index) =>
+                    <View key={index} style={{borderBottomColor: 'black', borderBottomWidth: 1,paddingBottom: 10, paddingTop: 10}}>
+                        <Text style={{textAlign: 'center', fontSize: 40}}>{data.name}</Text>
+                        <Text style={{textAlign: 'center', fontSize: 20}}>{data.cards.length} cards</Text>
+                    </View>
+            ):<Text>Nothing</Text>
+            }
+        </View>
         );
     }
 }
@@ -64,9 +67,10 @@ class HomeScreen extends Component {
 
 
 class ContactUs extends Component {
+    
     render() {
         return (
-                <TabNavigationExample />
+            <TabNavigationExample />
         );
     }
 }
@@ -103,7 +107,7 @@ const StackNavigatorExample = createStackNavigator(
             screen: HomeScreen,
             params: { username: 'aamir' },
             navigationOptions: {
-                title: "WELCOME SCREEN"
+                header: null,
             }
         },
         About: {
@@ -117,7 +121,8 @@ const StackNavigatorExample = createStackNavigator(
             screen: ContactUs,
             navigationOptions: {
                 title: "CONTACT US",
-            }
+                headerStyle: {height: 0}                
+            },
         },
     },
     {
