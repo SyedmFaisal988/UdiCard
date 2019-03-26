@@ -2,8 +2,8 @@
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 2581,
-  "expoServerNgrokUrl": "https://g8-hix.anonymous.udicards.exp.direct",
-  "packagerNgrokUrl": "https://packager.g8-hix.anonymous.udicards.exp.direct",
-  "ngrokPid": 2722
+  "packagerPid": 2326,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null
 }
