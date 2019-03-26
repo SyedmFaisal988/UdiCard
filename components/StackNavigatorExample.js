@@ -98,6 +98,13 @@ class ContactUs extends Component {
             }))
         }
     }
+    flipHandler = (data)=>{
+        const ans = 'option'+(data.answer+1)
+        alert('correct answer is: '+data[ans]);
+        this.setState((prevState)=>({
+            quest: prevState.quest+1,
+        }))
+    }
     render() {
         const  data  = this.props.navigation.getParam('data');
         const { quest, totQuest } = this.state;
@@ -131,19 +138,34 @@ class ContactUs extends Component {
                                 onPress={() => this.selectHandler(1, data.cards[quest])} >
                                 <Text style={{ color: 'white' }}>
                                     Option 2
-                    </Text>
+                                </Text>
+                            </TouchableHighlight>
+                            <TouchableHighlight style={[styles.button, {backgroundColor: 'red', marginTop: 10}]}
+                                onPress={()=>this.flipHandler(data.cards[quest])} >
+                                <Text style={{color: 'white'}}>
+                                    Flip Card
+                                </Text>
                             </TouchableHighlight>
                     </View>
             </View>:<View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: 10}}>
                 <Text style={{fontSize: 40}}>
                     You Completed the Quiz
                 </Text>   
-                <Text>
+                <Text style={{fontSize: 20}}>
                     Total Questions: {totQuest}
                 </Text>
-                <Text>
+                <Text style={{fontSize: 20}}>
                     Correct Answers: {this.state.correct}
                 </Text>
+                <Text style={{fontSize: 20}}>
+                    Correct Percentage: {(this.state.correct/totQuest)*100}
+                </Text>
+                <TouchableHighlight style={[styles.button, {backgroundColor: 'black'}]}
+                   onPress={()=>this.props.navigation.navigate('Home')} >
+                    <Text style={{color: 'white'}}>
+                        Goto Home
+                    </Text>
+                </TouchableHighlight>
             </View>}
             </View> 
         );
