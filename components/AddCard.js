@@ -29,6 +29,8 @@ class AddCard extends Component {
         state.tempAnswer1 = "";
         state.tempAnswer2 = "";
         state.tempQuestion = "";
+        state.switch1 = false;
+        state.switch2 = false;
         this.setState({...state});
     }
     // componentDidUpdate(prevProps, prevState) {
@@ -106,11 +108,12 @@ class AddCard extends Component {
                     onPress={()=>{
                         AsyncStorage.setItem(this.state.title, JSON.stringify(this.state.questions), (err)=>{
                         (err) && alert('err'); 
+                        if(this.props.changeTitle!==null && this.props.changeTitle!==undefined){
+                            this.props.changeTitle("",0);
+                        }
+                        navigation.navigate('DeckList'); 
                         navigation.navigate('Deck');
                     })
-                    if(this.props.changeTitle!==null){
-                        this.props.changeTitle(null, 0)
-                    }
                     }} >
                     <Text style={{color: 'black', fontSize: 20,}}>
                         Submit

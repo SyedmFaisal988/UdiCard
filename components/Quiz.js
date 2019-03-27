@@ -70,7 +70,7 @@ class Quiz extends Component {
                                     Option 2
                                 </Text>
                             </TouchableHighlight>
-                            <TouchableHighlight style={[styles.button, {backgroundColor: 'red', marginTop: 10}]}
+                            <TouchableHighlight style={[styles.button, {backgroundColor: 'red', marginTop: 10, borderWidth: 0,}]}
                                 onPress={()=>this.flipHandler(data.cards[quest])} >
                                 <Text style={{color: 'white'}}>
                                     Flip Card
@@ -78,7 +78,7 @@ class Quiz extends Component {
                             </TouchableHighlight>
                     </View>
             </View>:<View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: 10}}>
-                <Text style={{fontSize: 40}}>
+                <Text style={{fontSize: 40, textAlign: "center"}}>
                     You Completed the Quiz
                 </Text>   
                 <Text style={{fontSize: 20}}>

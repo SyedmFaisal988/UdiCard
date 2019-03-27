@@ -26,18 +26,10 @@ class AddDeck extends Component {
                 <TouchableHighlight style={{backgroundColor: 'black', marginTop: 20, width: 120, height: 45, justifyContent: 'center', alignItems: 'center', borderRadius: 7, }}
                    onPress={()=>this.props.changeTitle(this.state.title, 1)}>
                     <Text style={{color: 'white', fontSize: 20,}}>
-                        Submit
+                        Submit 
                     </Text>
                 </TouchableHighlight>
 
-
-                    {/* this button is to be deleted in final version */}
-                <TouchableHighlight onPress={()=>{AsyncStorage.getAllKeys()
-                .then(v=>AsyncStorage.multiRemove(v))}} >
-                    <Text>
-                        Delete All data
-                    </Text>
-                </TouchableHighlight>
             </View>
           );
     }
